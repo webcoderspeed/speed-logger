@@ -9,8 +9,19 @@ class LogMessage {
   constructor(message: string, data?: any) {
     this.message = message
     this.data = data
-    this.sourceFile = 'Unknown'
-    this.lineNumber = -1
+
+    const error = new Error()
+    const stackTrace = error.stack
+    if (stackTrace) {
+      const stackTraceLines = stackTrace.split('\n')
+      const callerLine = stackTraceLines[3]
+      const matchResult = callerLine.match(/\((.*):\d+:\d+\)/)
+      this.sourceFile = matchResult ? path.basename(matchResult[1]) : 'Unknown'
+      this.lineNumber = Number(callerLine.split(':')[1])
+    } else {
+      this.sourceFile = 'Unknown'
+      this.lineNumber = -1
+    }
   }
 
   public toString(): string {
@@ -23,7 +34,7 @@ class LogMessage {
       }),
     }
 
-    return JSON.stringify(output, null, 2)
+    return JSON.stringify(output)
   }
 }
 
