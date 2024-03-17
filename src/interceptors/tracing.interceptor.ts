@@ -30,3 +30,5 @@ export class TracingInterceptor implements NestInterceptor {
     );
   }
 }
+
+export * from 'jaeger-client';
