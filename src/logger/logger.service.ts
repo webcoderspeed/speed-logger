@@ -21,7 +21,7 @@ export class LoggerService implements ILogger {
   error(message: string, data?: unknown): void {
     this.logger.error(message, data);
   }
-  fatal(message: string, data?: unknown): void {
-    this.logger.fatal(message, data);
+  verbose(message: string, data?: unknown): void {
+    this.logger.verbose(message, data);
   }
 }

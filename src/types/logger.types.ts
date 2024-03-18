@@ -1,11 +1,12 @@
 import { LogLevel } from '@nestjs/common'
-import { DestinationStream, LoggerOptions } from 'pino'
+import { DestinationStream, LoggerOptions as PinoLoggerOptions } from 'pino'
+import { LoggerOptions as WinstonLoggerOptions, LogMethod} from 'winston'
 
 export interface ILogger {
-  info(message: string, data?: unknown): void
-  warn(message: string, data?: unknown): void
-  error(message: string, data?: unknown): void
-  fatal(message: string, data?: unknown): void
+  info(message: string, data?: unknown): void;
+  warn(message: string, data?: unknown): void;
+  error(message: string, data?: unknown): void;
+  verbose(message: string, data?: unknown): void;
 }
 
 export enum LoggerType {
@@ -13,9 +14,14 @@ export enum LoggerType {
   PINO = 'pino',
 }
 
-type IPinoConfiguration = {
-  type: LoggerType.PINO
-  options?: LoggerOptions<LogLevel> | DestinationStream
-}
+type IPinoOptions = {
+  type: LoggerType.PINO;
+  options?: PinoLoggerOptions<LogLevel> | DestinationStream;
+};
 
-export type ILoggerOptions = IPinoConfiguration
+type IWinstonOptions = {
+  type: LoggerType.WINSTON;
+  options?: WinstonLoggerOptions | DestinationStream;
+};
+
+export type ILoggerOptions = IPinoOptions | IWinstonOptions

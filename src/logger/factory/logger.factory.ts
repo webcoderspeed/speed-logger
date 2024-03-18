@@ -1,5 +1,6 @@
 import { PinoService } from '../pino/pino.service';
 import { ILogger, ILoggerOptions, LoggerType } from '../../types/logger.types';
+import { WinstonService } from '../winston/winston.service';
 
 export class LoggerFactory {
   getLogger(
@@ -9,6 +10,8 @@ export class LoggerFactory {
     switch (loggerType) {
       case LoggerType.PINO:
         return new PinoService(options);
+      case LoggerType.WINSTON:
+        return new WinstonService(options);
       default:
         throw new Error(`Unsupported logger type: ${loggerType}`);
     }

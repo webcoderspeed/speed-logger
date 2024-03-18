@@ -1,22 +1,24 @@
-import { LogLevel } from '@nestjs/common';
-import pino from 'pino';
+import { createLogger, transports, format } from 'winston';
 import { ILogger, ILoggerOptions } from '../../types/logger.types';
-import { format } from 'date-fns';
 import formatLogMessage from '../../utils/formatLogMessage';
 
-export class PinoService implements ILogger {
-  private readonly logger: pino.Logger<LogLevel>;
+const { combine, timestamp, printf, colorize, align  } = format;
+
+export class WinstonService implements ILogger {
+  private readonly logger;
 
   constructor(loggerOptions: ILoggerOptions['options']) {
-    this.logger = pino<LogLevel>({
-      transport: {
-        target: 'pino-pretty',
-      },
-      base: {
-        pid: false,
-      },
-      timestamp: () =>
-        `,"time":" ${format(new Date(), "yyyy-MM-dd'T'HH:mm:ss ")}"`,
+    this.logger = createLogger({
+      transports: [new transports.Console()],
+      format: combine(
+        colorize({ all: true }),
+        timestamp({
+          format: ' YYYY-MM-DDThh:mm:ss ',
+        }),
+        align(),
+        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
+        
+      ),
       ...loggerOptions,
     });
   }
