@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { JaegerTracer } from 'jaeger-client';
+import { JaegerTracer, TracingConfig, TracingOptions } from 'jaeger-client';
 import { v4 as uuidv4 } from 'uuid';
+import { initTracer } from 'jaeger-client';
 
 @Injectable()
 export class TracingInterceptor implements NestInterceptor {
@@ -31,4 +32,26 @@ export class TracingInterceptor implements NestInterceptor {
   }
 }
 
-export * from 'jaeger-client';
+export function initialiseTrace(
+  serviceName: string,
+  tracingConfig?: TracingConfig,
+  tracingOptions?: TracingOptions
+) {
+  return initTracer(
+    {
+      sampler: {
+        type: 'const',
+        param: 1,
+      },
+      reporter: {
+        logSpans: true,
+      },
+      ...tracingConfig,
+      serviceName,
+    },
+    {
+      logger: console,
+      ...tracingOptions,
+    }
+  );
+}

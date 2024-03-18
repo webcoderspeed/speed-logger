@@ -1,13 +1,13 @@
 {
   "name": "speed-logger-1",
-  "version": "3.0.0",
+  "version": "23.0.0",
   "description": "",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "scripts": {
     "dev": "nodemon --exec ts-node src/main.ts",
     "lint": "npx prettier --write src/**/*.ts",
-    "build": " tsc"
+    "build": "rimraf lib && tsc"
   },
   "keywords": [],
   "author": "webcoderspeed",
